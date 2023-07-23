@@ -1,6 +1,7 @@
 package com.mm.blogbot;
 
 import com.mm.blogbot.domain.BlogInfo;
+import com.mm.blogbot.domain.NewPostingsInfo;
 import com.mm.blogbot.service.CrawlingService;
 import java.io.IOException;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +16,7 @@ public class BlogBotApplication {
 	public static void main(String[] args) throws IOException {
 		ApplicationContext context = SpringApplication.run(BlogBotApplication.class, args);
 		CrawlingService crawlingService = context.getBean(CrawlingService.class);
+		NewPostingsInfo newPost = crawlingService.getNewPost();
 //		try {
 ////		crawlingService.getPost();
 //		} catch (IOException e) {

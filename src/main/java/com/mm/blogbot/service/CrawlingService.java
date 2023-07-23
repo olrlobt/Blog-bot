@@ -1,9 +1,15 @@
 package com.mm.blogbot.service;
 
 import com.mm.blogbot.domain.BlogInfo;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.mm.blogbot.domain.NewPostingsInfo;
+import com.mm.blogbot.domain.PostingInfo;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,11 +23,12 @@ import java.io.IOException;
 @Slf4j
 public class CrawlingService {
 
-    private final String URL = "https://olrlobt.tistory.com/rss";
     @Value("${blog.title}")
     private String titleClassName;
     @Value("${blog.date}")
     private String dateClassName;
+    @Value("${blog.link}")
+    private String linkClassName;
 
     private BlogInfo blogInfo;
 
@@ -31,12 +38,39 @@ public class CrawlingService {
         log.info("bloginfo = {}", blogInfo);
     }
 
+    public NewPostingsInfo getNewPost() throws IOException {
+        NewPostingsInfo newPostingsInfo = new NewPostingsInfo(new ArrayList<>());
 
-    public void getPost() throws IOException {
-        Document document = Jsoup.connect(URL).get();
-        getPostTitle(document);
+        for (String url : blogInfo.getUrls()) {
+            PostingInfo newPosting = getNewPostInfo(url);
+            if (newPosting != null) {
+                newPostingsInfo.getNewPostingInfos().add(newPosting);
+            }
+        }
 
-        System.out.println(getPostDate(document));
+        log.info("new posting size = {}", newPostingsInfo.getNewPostingInfos().size());
+        return newPostingsInfo;
+    }
+
+    private PostingInfo getNewPostInfo(String url) throws IOException {
+        Document document = Jsoup.connect(url).get();
+        LocalDateTime postDate = getPostDate(document);
+
+        if (!validNewPost(postDate)) {
+            log.info("최신 포스팅 없음");
+            return null;
+        }
+        return new PostingInfo(getPostTitle(document), getPostLink(document), postDate);
+    }
+
+    private boolean validNewPost(LocalDateTime postDate) {
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(postDate, now);
+
+        if (duration.toDays() < 1) {
+            return true;
+        }
+        return false;
     }
 
     private String getPostTitle(Document document) {
@@ -44,15 +78,15 @@ public class CrawlingService {
         return titles.get(0).text();
     }
 
-    private String getPostDate(Document document) {
+    private String getPostLink(Document document) {
+        Elements link = document.select(linkClassName);
+        return link.get(0).text();
+    }
+
+    private LocalDateTime getPostDate(Document document) {
         Elements dates = document.select(dateClassName);
-        try {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
-            Date date = inputFormat.parse(dates.get(0).text());
-            return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(date);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        String dateString = dates.get(0).text();
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
+        return LocalDateTime.parse(dateString, inputFormatter);
     }
 }
