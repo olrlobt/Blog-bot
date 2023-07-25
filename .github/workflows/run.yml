@@ -34,8 +34,8 @@ jobs:
 
       - name: Create application-secret.yml and application-blogURLs.yml
         env:
-          SECRET_YML: ${{ secrets.SECRET_YML }}
-          BLOG_URLS_YML: ${{ secrets.BLOG_URLS_YML }}
+          SECRET_YML: ${{ secrets.SECRET_APP }}
+          BLOG_URLS_YML: ${{ secrets.BLOG_URLS }}
         run: |
           echo "${SECRET_YML}" > ./src/main/resources/application-secret.yml
           echo "${BLOG_URLS_YML}" > ./src/main/resources/application-blogURLs.yml
