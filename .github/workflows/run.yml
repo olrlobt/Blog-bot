@@ -3,7 +3,9 @@ name: Scheduled Workflow
 on:
   schedule:
     - cron:  '*/5 * * * *'
-
+  push:
+    branches:
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
