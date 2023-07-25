@@ -7,9 +7,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -57,7 +55,7 @@ public class CrawlingService {
         LocalDateTime postDate = getPostDate(document);
 
         if (!validNewPost(postDate)) {
-            log.info("최신 포스팅 없음");
+            log.info(url + " 에는 최신 포스팅 없음");
             return null;
         }
         return new PostingInfo(getPostTitle(document), getPostLink(document), postDate);
