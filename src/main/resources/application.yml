@@ -1,3 +1,18 @@
 spring:
   config:
-    import: classpath:application-secret.yml
+    import:
+      - classpath:application-secret.yml
+      - classpath:application-blogURLs.yml
+
+
+blog:
+  title: "item title"
+  link: "item link"
+  date: "item pubDate"
+
+
+logging:
+  pattern:
+    console: "%cyan(%d{HH:mm:ss}) %highlight(%-5level) %msg%n"
+  level:
+    root: info

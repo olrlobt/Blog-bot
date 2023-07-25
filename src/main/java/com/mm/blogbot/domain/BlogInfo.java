@@ -1,21 +1,16 @@
 package com.mm.blogbot.domain;
 
-import lombok.Getter;
 
-@Getter
+import java.util.List;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+
+@Data
+@Component
+@ConfigurationProperties(prefix = "blog")
 public class BlogInfo {
 
-    private final String url;
-    private final String contentsClassName;
-    private final String titleClassName;
-    private final String summaryClassName;
-    private final String dateClassName;
-
-    public BlogInfo(String url, String contentsClassName, String titleClassName, String summaryClassName, String dateClassName) {
-        this.url = url;
-        this.contentsClassName = contentsClassName;
-        this.titleClassName = titleClassName;
-        this.summaryClassName = summaryClassName;
-        this.dateClassName = dateClassName;
-    }
+    private List<String> urls;
 }

@@ -33,7 +33,7 @@ public class BlogBotController {
     @GetMapping("/post")
     @ResponseBody
     public void getPostTitle() throws IOException {
-        crawlingService.getPostTitle();
+//        crawlingService.getPost();
     }
 
 }

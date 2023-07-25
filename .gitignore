@@ -38,3 +38,4 @@ out/
 
 ### Secret ###
 application-secret.yml
+application-blogURLs.yml
