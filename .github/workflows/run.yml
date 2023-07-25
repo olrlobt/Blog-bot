@@ -32,14 +32,13 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      - name: Use application-secret.yml and application-blogURLs.yml
+      - name: Create application-secret.yml and application-blogURLs.yml
         env:
-          SECRET_APP: ${{ secrets.SECRET_APP }}
-          BLOG_URLS: ${{ secrets.BLOG_URLS }}
+          SECRET_YML: ${{ secrets.SECRET_YML }}
+          BLOG_URLS_YML: ${{ secrets.BLOG_URLS_YML }}
         run: |
-          echo "SECRET_APP=${SECRET_APP}" >> .env
-          echo "BLOG_URLS=${BLOG_URLS}" >> .env
+          echo "${SECRET_YML}" > ./src/main/resources/application-secret.yml
+          echo "${BLOG_URLS_YML}" > ./src/main/resources/application-blogURLs.yml
 
       - name: Run Project
-        run: |
-          ./gradlew bootRun --spring.config.import=classpath:/application-secret.yml,classpath:/application-blogURLs.yml
+        run: ./gradlew bootRun
