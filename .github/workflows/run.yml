@@ -34,7 +34,6 @@ jobs:
 
       - name: Create application-secret.yml and application-blogURLs.yml
         env:
-          SSAFY: ${{ secrets.SSAFY }}
           SECRET_APP: ${{ secrets.SECRET_APP }}
           BLOG_URLS: ${{ secrets.BLOG_URLS }}
         run: |
