@@ -35,11 +35,11 @@ jobs:
       - name: Create application-secret.yml and application-blogURLs.yml
         env:
           SSAFY: ${{ secrets.SSAFY }}
-          SECRET_YML: ${{ secrets.SECRET_APP }}
-          BLOG_URLS_YML: ${{ secrets.BLOG_URLS }}
+          SECRET_APP: ${{ secrets.SECRET_APP }}
+          BLOG_URLS: ${{ secrets.BLOG_URLS }}
         run: |
-          echo "${SECRET_YML}" > ./src/main/resources/application-secret.yml
-          echo "${BLOG_URLS_YML}" > ./src/main/resources/application-blogURLs.yml
+          echo "${SECRET_APP}" > ./src/main/resources/application-secret.yml
+          echo "${BLOG_URLS}" > ./src/main/resources/application-blogURLs.yml
 
       - name: Run Project
         run: ./gradlew bootRun
