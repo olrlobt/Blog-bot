@@ -15,8 +15,9 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class MessageService {
 
-    @Value("${server.ssafy}")
+    @Value("${SSAFY}")
     private String SERVER_SSAFY;
+
 
     public void sendMessage(NewPostingsInfo newPost){
         for(PostingInfo postingInfo : newPost.getNewPostingInfos()){
