@@ -2,10 +2,11 @@ name: Scheduled Workflow
 
 on:
   schedule:
-    - cron:  '*/5 * * * *'
+    - cron: '*/5 * * * *'
   push:
     branches:
       - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,14 +32,14 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      - name: Use application-secret.yml
+      - name: Use application-secret.yml and application-blogURLs.yml
         env:
-          SECRET_APP: ${{ secrets.SECRET_APP }}  # Access the secret
+          SECRET_APP: ${{ secrets.SECRET_APP }}
           BLOG_URLS: ${{ secrets.BLOG_URLS }}
         run: |
-          echo "${SECRET_APP}" > application-secret.yml
-          echo "${BLOG_URLS}" > application-blogURLs.yml
-
+          echo "SECRET_APP=${SECRET_APP}" >> .env
+          echo "BLOG_URLS=${BLOG_URLS}" >> .env
 
       - name: Run Project
-        run: ./gradlew bootRun
+        run: |
+          ./gradlew bootRun --spring.config.import=classpath:/application-secret.yml,classpath:/application-blogURLs.yml
