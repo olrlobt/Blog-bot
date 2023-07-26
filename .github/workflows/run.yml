@@ -8,7 +8,6 @@ on:
       - main
       - test
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
