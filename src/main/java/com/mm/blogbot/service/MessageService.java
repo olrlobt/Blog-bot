@@ -1,6 +1,6 @@
 package com.mm.blogbot.service;
 
-import com.mm.blogbot.domain.NewPostingsInfo;
+import com.mm.blogbot.domain.BlogInfo;
 import com.mm.blogbot.domain.PostingInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -19,8 +19,8 @@ public class MessageService {
     private String SERVER_SSAFY;
 
 
-    public void sendMessage(NewPostingsInfo newPost){
-        for(PostingInfo postingInfo : newPost.getNewPostingInfos()){
+    public void sendMessage(BlogInfo newPost) {
+        for (PostingInfo postingInfo : newPost.getBlogs()) {
 //            sendMessageOfBot(postingInfo);
             sendMessageOfUser(postingInfo);
         }
@@ -29,7 +29,7 @@ public class MessageService {
     public void sendMessageOfUser(PostingInfo postingInfo) {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         JSONObject json = new JSONObject();
-        json.put("text", "## " + postingInfo.getTitle() + "\n" + postingInfo.getLink());
+        json.put("text", "새로운 포스팅이 올라왔습니다 ! \n ## [" + postingInfo.getTitle() + "](" + postingInfo.getLink() + ") \n `작성자 : " + postingInfo.getAuthor() + "`");
 
         requestBody.add("payload", json.toString());
 
@@ -44,11 +44,10 @@ public class MessageService {
                 requestEntity,
                 String.class);
 
-
         HttpStatus statusCode = responseEntity.getStatusCode();
         String responseBody = responseEntity.getBody();
-        log.info("Status code: {}" , statusCode);
-        log.info("Response body: {}" , responseBody);
+        log.info("Status code: {}", statusCode);
+        log.info("Response body: {}", responseBody);
     }
 
 //    private void sendMessageOfBot(PostingInfo postingInfo) {

@@ -1,16 +1,22 @@
 package com.mm.blogbot.domain;
 
-
-import java.util.List;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import java.util.List;
 
 @Data
-@Component
-@ConfigurationProperties(prefix = "blog")
+@Configuration
+@ConfigurationProperties(prefix = "member")
 public class BlogInfo {
 
-    private List<String> urls;
+    private List<PostingInfo> blogs;
+
+    public BlogInfo() {
+    }
+
+    public BlogInfo(List<PostingInfo> blogs) {
+        this.blogs = blogs;
+    }
 }

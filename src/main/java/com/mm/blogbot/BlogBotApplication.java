@@ -1,7 +1,6 @@
 package com.mm.blogbot;
 
 import com.mm.blogbot.domain.BlogInfo;
-import com.mm.blogbot.domain.NewPostingsInfo;
 import com.mm.blogbot.service.CrawlingService;
 import java.io.IOException;
 
@@ -20,11 +19,18 @@ public class BlogBotApplication {
 		ApplicationContext context = SpringApplication.run(BlogBotApplication.class, args);
 
 		CrawlingService crawlingService = context.getBean(CrawlingService.class);
-		NewPostingsInfo newPost = crawlingService.getNewPost();
+		BlogInfo newPost = crawlingService.getNewPost();
+
+		if (newPost.getBlogs().size() == 0) {
+			exit(context);
+		}
 
 		MessageService messageService = context.getBean(MessageService.class);
 		messageService.sendMessage(newPost);
+		exit(context);
+	}
 
+	private static void exit(ApplicationContext context){
 		((ConfigurableApplicationContext) context).close();
 	}
 }
