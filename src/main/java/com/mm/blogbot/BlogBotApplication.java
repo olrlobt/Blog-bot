@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
 @EnableConfigurationProperties(BlogInfo.class)
@@ -17,10 +18,13 @@ public class BlogBotApplication {
 
 	public static void main(String[] args) throws IOException {
 		ApplicationContext context = SpringApplication.run(BlogBotApplication.class, args);
+
 		CrawlingService crawlingService = context.getBean(CrawlingService.class);
 		NewPostingsInfo newPost = crawlingService.getNewPost();
 
 		MessageService messageService = context.getBean(MessageService.class);
 		messageService.sendMessage(newPost);
+
+		((ConfigurableApplicationContext) context).close();
 	}
 }
