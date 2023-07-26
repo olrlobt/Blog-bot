@@ -37,6 +37,10 @@ public class CrawlingService {
     public BlogInfo getNewPost() throws IOException {
         BlogInfo newPostingsInfo = new BlogInfo(new ArrayList<>());
 
+        if(blogInfo == null){
+            return newPostingsInfo;
+        }
+
         for (PostingInfo blog : blogInfo.getBlogs()) {
             PostingInfo newPosting = getNewPostInfo(blog.getLink() , blog.getAuthor());
             if (newPosting != null) {
