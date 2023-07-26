@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+      - test
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,9 +39,9 @@ jobs:
           SECRET_APP: ${{ secrets.SECRET_APP }}
           BLOG_URLS: ${{ secrets.BLOG_URLS }}
         run: |
-          echo "${SECRET_APP}" > application-secret.yml
-          echo "${BLOG_URLS}" > application-blogURLs.yml
-
+          echo "MEMBER=${{ secrets.MEMBER }}" >> $GITHUB_ENV
+          echo "${SECRET_APP}" | base64 --decode > ./src/main/resources/application-secret.yml
+          echo "${BLOG_URLS}" | base64 --decode > ./src/main/resources/application-blogURLs.yml
 
       - name: Run Project
         run: ./gradlew bootRun
