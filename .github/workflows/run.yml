@@ -33,7 +33,8 @@ jobs:
 
       - name: Use application-secret.yml
         env:
-          SECRET_APP: ${{ secrets.SECRET_APP }}  # Access the secret
+          MEMBER : ${{ secrets.MEMBER }}
+          SECRET_APP: ${{ secrets.SECRET_APP }}
           BLOG_URLS: ${{ secrets.BLOG_URLS }}
         run: |
           echo "${SECRET_APP}" > application-secret.yml

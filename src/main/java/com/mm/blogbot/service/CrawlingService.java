@@ -1,7 +1,6 @@
 package com.mm.blogbot.service;
 
 import com.mm.blogbot.domain.BlogInfo;
-import com.mm.blogbot.domain.NewPostingsInfo;
 import com.mm.blogbot.domain.PostingInfo;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -27,7 +26,6 @@ public class CrawlingService {
     private String dateClassName;
     @Value("${blog.link}")
     private String linkClassName;
-
     private BlogInfo blogInfo;
 
     @Autowired
@@ -36,21 +34,21 @@ public class CrawlingService {
         log.info("bloginfo = {}", blogInfo);
     }
 
-    public NewPostingsInfo getNewPost() throws IOException {
-        NewPostingsInfo newPostingsInfo = new NewPostingsInfo(new ArrayList<>());
+    public BlogInfo getNewPost() throws IOException {
+        BlogInfo newPostingsInfo = new BlogInfo(new ArrayList<>());
 
-        for (String url : blogInfo.getUrls()) {
-            PostingInfo newPosting = getNewPostInfo(url);
+        for (PostingInfo blog : blogInfo.getBlogs()) {
+            PostingInfo newPosting = getNewPostInfo(blog.getLink() , blog.getAuthor());
             if (newPosting != null) {
-                newPostingsInfo.getNewPostingInfos().add(newPosting);
+                newPostingsInfo.getBlogs().add(newPosting);
             }
         }
 
-        log.info("new posting size = {}", newPostingsInfo.getNewPostingInfos().size());
+        log.info("new posting size = {}", newPostingsInfo.getBlogs().size());
         return newPostingsInfo;
     }
 
-    private PostingInfo getNewPostInfo(String url) throws IOException {
+    private PostingInfo getNewPostInfo(String url, String author) throws IOException {
         Document document = Jsoup.connect(url).get();
         LocalDateTime postDate = getPostDate(document);
 
@@ -58,7 +56,7 @@ public class CrawlingService {
             log.info(url + " 에는 최신 포스팅 없음");
             return null;
         }
-        return new PostingInfo(getPostTitle(document), getPostLink(document), postDate);
+        return new PostingInfo(author , getPostTitle(document), getPostLink(document), postDate);
     }
 
     private boolean validNewPost(LocalDateTime postDate) {
