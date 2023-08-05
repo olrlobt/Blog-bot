@@ -26,7 +26,7 @@ public class CrawlingService {
     private String dateClassName;
     @Value("${blog.link}")
     private String linkClassName;
-    private BlogInfo blogInfo;
+    private final BlogInfo blogInfo;
 
     @Autowired
     public CrawlingService(BlogInfo blogInfo) {
@@ -56,7 +56,7 @@ public class CrawlingService {
         Document document = Jsoup.connect(url).get();
         LocalDateTime postDate = getPostDate(document);
 
-        if (!validNewPost(postDate)) {
+        if (postDate == null || !validNewPost(postDate)) {
             log.info(url + " 에는 최신 포스팅 없음");
             return null;
         }
@@ -67,10 +67,7 @@ public class CrawlingService {
         LocalDateTime now = LocalDateTime.now();
         Duration duration = Duration.between(postDate, now);
 
-        if (duration.toDays() < 1) {
-            return true;
-        }
-        return false;
+        return duration.toDays() < 1;
     }
 
     private String getPostTitle(Document document) {
@@ -85,6 +82,10 @@ public class CrawlingService {
 
     private LocalDateTime getPostDate(Document document) {
         Elements dates = document.select(dateClassName);
+        if(dates.isEmpty()){
+            return null;
+        }
+
         String dateString = dates.get(0).text();
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
         return LocalDateTime.parse(dateString, inputFormatter);
