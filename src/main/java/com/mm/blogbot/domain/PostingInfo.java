@@ -11,6 +11,9 @@ public class PostingInfo {
     private String link;
     private ZonedDateTime time;
 
+    public PostingInfo() {
+    }
+
     public PostingInfo(String author, String title, String link, ZonedDateTime time) {
         this.author = author;
         this.title = title;
