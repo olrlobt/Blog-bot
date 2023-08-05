@@ -23,6 +23,7 @@ public class BlogBotApplication {
 
 		if (newPost.getBlogs().size() == 0) {
 			exit(context);
+			return;
 		}
 
 		MessageService messageService = context.getBean(MessageService.class);

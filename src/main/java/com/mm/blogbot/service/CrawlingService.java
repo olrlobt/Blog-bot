@@ -3,7 +3,9 @@ package com.mm.blogbot.service;
 import com.mm.blogbot.domain.BlogInfo;
 import com.mm.blogbot.domain.PostingInfo;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -47,14 +49,18 @@ public class CrawlingService {
                 newPostingsInfo.getBlogs().add(newPosting);
             }
         }
-
         log.info("new posting size = {}", newPostingsInfo.getBlogs().size());
         return newPostingsInfo;
     }
 
     private PostingInfo getNewPostInfo(String url, String author) throws IOException {
         Document document = Jsoup.connect(url).get();
-        LocalDateTime postDate = getPostDate(document);
+        ZonedDateTime postDate = null;
+        if(url.contains("tistory")){
+            postDate = getPostDateForTistory(document);
+        }else if(url.contains("velog")){
+            postDate = getPostDateForVelog(document);
+        }
 
         if (postDate == null || !validNewPost(postDate)) {
             log.info(url + " 에는 최신 포스팅 없음");
@@ -63,9 +69,9 @@ public class CrawlingService {
         return new PostingInfo(author , getPostTitle(document), getPostLink(document), postDate);
     }
 
-    private boolean validNewPost(LocalDateTime postDate) {
-        LocalDateTime now = LocalDateTime.now();
-        Duration duration = Duration.between(postDate, now);
+    private boolean validNewPost(ZonedDateTime postDate) {
+        ZonedDateTime nowZone = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        Duration duration = Duration.between(postDate, nowZone);
 
         return duration.toDays() < 1;
     }
@@ -80,7 +86,7 @@ public class CrawlingService {
         return link.get(0).text();
     }
 
-    private LocalDateTime getPostDate(Document document) {
+    private ZonedDateTime getPostDateForTistory(Document document) {
         Elements dates = document.select(dateClassName);
         if(dates.isEmpty()){
             return null;
@@ -88,6 +94,19 @@ public class CrawlingService {
 
         String dateString = dates.get(0).text();
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
-        return LocalDateTime.parse(dateString, inputFormatter);
+        return ZonedDateTime.parse(dateString, inputFormatter);
     }
+
+    private ZonedDateTime getPostDateForVelog(Document document) {
+        Elements dates = document.select(dateClassName);
+        if (dates.isEmpty()) {
+            return null;
+        }
+
+        String dateString = dates.get(0).text();
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.ENGLISH).withZone(ZoneId.of("GMT"));
+        Instant instant = Instant.from(inputFormatter.parse(dateString));
+        return instant.atZone(ZoneId.systemDefault());
+    }
+
 }

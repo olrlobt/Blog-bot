@@ -16,6 +16,3 @@ logging:
     console: "%cyan(%d{HH:mm:ss}) %highlight(%-5level) %msg%n"
   level:
     root: info
-
-
-member: ${MEMBER}

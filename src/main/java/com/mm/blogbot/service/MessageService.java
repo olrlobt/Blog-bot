@@ -29,7 +29,7 @@ public class MessageService {
     public void sendMessageOfUser(PostingInfo postingInfo) {
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
         JSONObject json = new JSONObject();
-        json.put("text", "새로운 포스팅이 올라왔습니다 ! \n ## [" + postingInfo.getTitle() + "](" + postingInfo.getLink() + ") \n `작성자 : " + postingInfo.getAuthor() + "`");
+        json.put("text", "새로운 포스팅이 올라왔습니다 ! \n #### [" + postingInfo.getTitle() + "](" + postingInfo.getLink() + ") \n `작성자 : " + postingInfo.getAuthor() + "`");
 
         requestBody.add("payload", json.toString());
 
