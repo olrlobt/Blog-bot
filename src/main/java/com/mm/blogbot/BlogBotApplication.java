@@ -30,7 +30,7 @@ public class BlogBotApplication {
 		exit(context);
 	}
 
-	private static void exit(ApplicationContext context){//
+	private static void exit(ApplicationContext context){////
 		((ConfigurableApplicationContext) context).close();
 	}
 }
