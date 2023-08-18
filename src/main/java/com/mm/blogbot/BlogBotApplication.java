@@ -33,4 +33,4 @@ public class BlogBotApplication {
 	private static void exit(ApplicationContext context){////
 		((ConfigurableApplicationContext) context).close();
 	}
-}
+}//
