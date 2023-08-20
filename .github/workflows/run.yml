@@ -35,11 +35,9 @@ jobs:
 
       - name: Use application-secret.yml
         env:
-          MEMBER : ${{ secrets.MEMBER }}
           SECRET_APP: ${{ secrets.SECRET_APP }}
           BLOG_URLS: ${{ secrets.BLOG_URLS }}
         run: |
-          echo "MEMBER=${{ secrets.MEMBER }}" >> $GITHUB_ENV
           echo "${SECRET_APP}" | base64 --decode > ./src/main/resources/application-secret.yml
           echo "${BLOG_URLS}" | base64 --decode > ./src/main/resources/application-blogURLs.yml
 
