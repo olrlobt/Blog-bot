@@ -5,8 +5,6 @@ import lombok.Data;
 
 @Data
 public class PostingInfo {
-
-    private String author;
     private String title;
     private String link;
     private ZonedDateTime time;
@@ -14,10 +12,10 @@ public class PostingInfo {
     public PostingInfo() {
     }
 
-    public PostingInfo(String author, String title, String link, ZonedDateTime time) {
-        this.author = author;
+    public PostingInfo(String title, String link, ZonedDateTime time) {
         this.title = title;
         this.link = link;
         this.time = time;
     }
+
 }

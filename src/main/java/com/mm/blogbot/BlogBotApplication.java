@@ -1,33 +1,36 @@
 package com.mm.blogbot;
 
-import com.mm.blogbot.domain.BlogInfo;
+import com.mm.blogbot.domain.MemberInfo;
 import com.mm.blogbot.service.CrawlingService;
 import java.io.IOException;
 
 import com.mm.blogbot.service.MessageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
+@Slf4j
 @SpringBootApplication
-@EnableConfigurationProperties(BlogInfo.class)
+@EnableConfigurationProperties(MemberInfo.class)
 public class BlogBotApplication {
 
 	public static void main(String[] args) throws IOException {
 		ApplicationContext context = SpringApplication.run(BlogBotApplication.class, args);
-
 		CrawlingService crawlingService = context.getBean(CrawlingService.class);
-		BlogInfo newPost = crawlingService.getNewPost();
+		MemberInfo newPosts = crawlingService.getNewPost();
 
-		if (newPost.getBlogs().size() == 0) {
+		if (newPosts.getBlogInfos().stream().noneMatch(blogInfo -> blogInfo.getPostingInfos().size() != 0)) {
+			log.info("None Match");
 			exit(context);
 			return;
 		}
 
 		MessageService messageService = context.getBean(MessageService.class);
-		messageService.sendMessage(newPost);
+		messageService.sendMessage(newPosts);
+		log.info("Success");
 		exit(context);
 	}
 
