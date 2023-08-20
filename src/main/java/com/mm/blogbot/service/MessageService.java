@@ -44,7 +44,7 @@ public class MessageService {
     private JSONObject makeMessage(BlogInfo blogInfo) {
         JSONObject jsonAttachment = new JSONObject();
         jsonAttachment.put("fallback", blogInfo.getAuthor() + "의 새로운 포스팅");
-        jsonAttachment.put("color", "#FF8000");
+        jsonAttachment.put("color", blogInfo.getColor());
         jsonAttachment.put("author_name", blogInfo.getAuthor());
 
         JSONArray fieldArray = new JSONArray();

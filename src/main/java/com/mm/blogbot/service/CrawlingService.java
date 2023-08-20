@@ -48,22 +48,22 @@ public class CrawlingService {
         }
 
         for (BlogInfo blog : memberInfo.getBlogInfos()) {
-            newPostsInfo.addBlogInfo(getNewPostInfo(blog.getLink() , blog.getAuthor()));
+            newPostsInfo.addBlogInfo(getNewPostInfo(blog));
         }
         return newPostsInfo;
     }
 
-    private BlogInfo getNewPostInfo(String url, String author) throws IOException {
-        Document document = Jsoup.connect(url).get();
+    private BlogInfo getNewPostInfo(BlogInfo blog) throws IOException {
+        Document document = Jsoup.connect(blog.getLink()).get();
         ZonedDateTime postDate = null;
-        BlogInfo postingInfos = new BlogInfo(author);
+        BlogInfo postingInfos = new BlogInfo(blog.getAuthor(), blog.getColor());
 
         int index= -1;
         while (validNewPost(postDate = parsePostDate(getPostElements(document, dateClassName, ++index)))) {
             postingInfos.addPosting(new PostingInfo(getPostElements(document,titleClassName, index), getPostElements(document,linkClassName, index), postDate));
         }
         if (postingInfos.getPostingInfos().size() == 0) {
-            log.info(url + " 에는 최신 포스팅 없음");
+            log.info(blog.getLink() + " 에는 최신 포스팅 없음");
         }
         return postingInfos;
     }
@@ -72,7 +72,7 @@ public class CrawlingService {
         ZonedDateTime nowZone = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
         Duration duration = Duration.between(postDate, nowZone);
 
-        return duration.toDays() < 5;
+        return duration.toDays() < 1;
     }
     private String getPostElements(Document document , String elementsName , int index) {
         Elements elements = document.select(elementsName);

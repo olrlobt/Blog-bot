@@ -11,6 +11,7 @@ public class BlogInfo {
     private List<PostingInfo> postingInfos;
     private String author;
     private String link;
+    private String color;
 
     public void addPosting(PostingInfo post){
         postingInfos.add(post);
@@ -19,8 +20,9 @@ public class BlogInfo {
     public BlogInfo() {
     }
 
-    public BlogInfo(String author) {
+    public BlogInfo(String author, String color) {
         postingInfos = new ArrayList<>();
         this.author = author;
+        this.color = color;
     }
 }
