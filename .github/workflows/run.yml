@@ -1,12 +1,12 @@
 name: Scheduled Workflow
 
-on:
-  schedule:
-    - cron: '0 1 * * *'
-  push:
-    branches:
-      - main
-      - test
+# on:
+#   schedule:
+#     - cron: '0 1 * * *'
+#   push:
+#     branches:
+#       - main
+#       - test
 
 jobs:
   build:
